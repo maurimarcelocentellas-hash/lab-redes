@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script Reproducible ETN1011 - UMSA: Topología hostA <-> hostB
+# Script oficial ETN1011: Topología hostA <-> hostB
 
 echo "[+] Limpiando namespaces previos..."
 sudo ip netns del hostA 2>/dev/null
@@ -25,4 +25,4 @@ sudo ip netns exec hostB ip addr add 192.168.1.2/24 dev vethB
 sudo ip netns exec hostB ip link set vethB up
 sudo ip netns exec hostB ip link set lo up
 
-echo "[+] Topología ETN1011 desplegada correctamente."
+echo "[+] Configuración completada."

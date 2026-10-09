@@ -1,21 +1,33 @@
 ===================================================================
- EVIDENCIA OFICIAL ETN1011: ORIENTACIÓN LABORATORIO 1 (UMSA)
+ EVIDENCIA OFICIAL ETN1011: TOPOLOGÍA hostA <-> hostB
 ===================================================================
 
-1. INFORMACIÓN DEL SISTEMA (uname -a / os-release):
-Linux DESKTOP-3KRJ81R 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
-PRETTY_NAME="Ubuntu 24.04.4 LTS"
+1. NAMESPACES ACTIVOS:
+hostB (id: 1)
+hostA (id: 0)
 
-2. NAMESPACES DE RED REGISTRADOS (ip netns list):
-demo-ns (id: 0)
+2. INTERFAZ vethA EN hostA:
+8: vethA@if7: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 56:71:2b:d3:c2:0c brd ff:ff:ff:ff:ff:ff link-netns hostB
+    inet 192.168.1.1/24 scope global vethA
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5471:2bff:fed3:c20c/64 scope link 
+       valid_lft forever preferred_lft forever
 
-3. INTERFAZ Y RUTA EN hostA (vethA - 192.168.1.1/24):
+3. INTERFAZ vethB EN hostB:
+7: vethB@if8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether ba:74:74:29:ca:68 brd ff:ff:ff:ff:ff:ff link-netns hostA
+    inet 192.168.1.2/24 scope global vethB
+       valid_lft forever preferred_lft forever
+    inet6 fe80::b874:74ff:fe29:ca68/64 scope link 
+       valid_lft forever preferred_lft forever
 
-4. INTERFAZ Y RUTA EN hostB (vethB - 192.168.1.2/24):
+4. PRUEBA DE CONECTIVIDAD PING (hostA -> hostB):
+PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.044 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.051 ms
+64 bytes from 192.168.1.2: icmp_seq=3 ttl=64 time=0.046 ms
 
-5. PRUEBA DE CONECTIVIDAD ICMP (hostA -> hostB):
-
-6. TABLA DE VECINOS ARP EN hostA (ip neigh):
-
-7. PRUEBA DE DIAGNÓSTICO DE FALLA (Salida a Internet desde hostA sin Gateway):
-Cannot open network namespace "hostA": No such file or directory
+--- 192.168.1.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2276ms
+rtt min/avg/max/mdev = 0.044/0.047/0.051/0.003 ms
