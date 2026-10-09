@@ -1,41 +1,40 @@
 ===================================================================
-GUÍA DE COMANDOS UTILIZADOS EN EL LABORATORIO DE REDES
+GUÍA DE COMANDOS COMPLETA - ETN1011 (CLASE DE ORIENTACIÓN LAB 1)
 ===================================================================
 
-1. GESTIÓN DE PAQUETES Y SISTEMA
-- cd ~ : Cambia al directorio personal del usuario.
-- pwd : Muestra la ruta del directorio actual en el sistema de archivos.
-- sudo apt update : Actualiza la lista de paquetes disponibles en los repositorios de Ubuntu.
-- sudo apt install -y iproute2 iputils-ping traceroute git curl : Instala utilidades esenciales de red y control de versiones.
+1. COMANDOS DE DIAGNÓSTICO DE SISTEMA Y NAVEGACIÓN
+- whoami : Muestra el usuario actual en la terminal de Linux.
+- uname -a : Muestra detalles del kernel Linux, arquitectura y compilación.
+- cat /etc/os-release : Identifica la distribución GNU/Linux y su versión.
+- pwd / ls / ls -la : Muestra la ruta actual y lista archivos (incluyendo ocultos).
+- cd / cd ~ / cd .. : Navegación por el árbol de directorios del sistema.
+- mkdir [dir] / touch [file] : Crea un directorio y un archivo vacío respectivamente.
+- cp / mv / rm : Copia, mueve/renombra y elimina archivos en el sistema.
+- history | grep [filtro] : Busca comandos ejecutados anteriormente en el historial.
 
-2. CONFIGURACIÓN DE GIT Y AUTENTICACIÓN SSH
-- git config --global user.name "nombre" : Establece el nombre de usuario global para firmar commits.
-- git config --global user.email "email" : Establece el correo electrónico asociado a los commits.
-- git config --global --list : Muestra las variables de configuración globales activas en Git.
-- ssh-keygen -t ed25519 -C "email" : Genera un par de llaves criptográficas SSH para autenticación segura.
-- cat ~/.ssh/id_ed25519.pub : Imprime el contenido de la llave pública para registrarla en GitHub.
-- ssh -T git@github.com : Prueba la conexión y autenticación segura por SSH con GitHub.
+2. HERRAMIENTAS Y CONTROL DE VERSIONES
+- sudo apt update && sudo apt install : Actualiza repositorios e instala utilidades.
+- curl -fsSL https://opencode.ai/install | bash : Instala el asistente OpenCode en el sistema.
+- git config --global user.name / user.email : Configura identidad global en Git.
+- ssh-keygen -t ed25519 -C "correo" : Genera claves SSH para autenticación segura.
+- ssh -T git@github.com : Prueba la conexión SSH contra los servidores de GitHub.
 
-3. DIAGNÓSTICO Y CONECTIVIDAD DE RED
-- ip addr show : Lista todas las interfaces de red y sus direcciones IP en el host.
-- ip route show : Muestra la tabla de enrutamiento y la puerta de enlace predeterminada.
-- ping -c 4 github.com : Envía paquetes ICMP Echo Request para medir latencia y pérdida de paquetes.
-- curl -I https://github.com : Realiza una petición HTTP HEAD para consultar únicamente los encabezados del servidor web.
+3. INSPECCIÓN Y DIAGNÓSTICO DE RED
+- ip link : Muestra el estado físico y MAC de las interfaces de red.
+- ip addr : Muestra las direcciones IP y prefijos asignados a cada interfaz.
+- ip route : Muestra la tabla de enrutamiento y la puerta de enlace predeterminada.
+- ip neigh : Muestra la tabla de vecinos (caché ARP en IPv4 / NDP en IPv6).
+- ping [destino] : Comprueba conectividad ICMP de extremo a extremo.
+- traceroute [destino] : Rastrea el salto a salto de los paquetes hacia una IP.
+- mtr [destino] : Combina ping y traceroute en tiempo real para diagnóstico de red.
 
-4. CREACIÓN Y CONFIGURACIÓN DE NETWORK NAMESPACES Y VETH
-- sudo ip netns add demo-ns : Crea un nuevo espacio de nombres de red aislado (namespace).
-- ip netns list : Muestra la lista de espacios de red aislados creados en el sistema.
-- sudo ip netns exec demo-ns [comando] : Ejecuta un comando específico dentro del contexto del namespace aislado.
-- sudo ip link add veth0 type veth peer name veth1 : Crea un enlace de red virtual de dos extremos (Virtual Ethernet).
-- sudo ip link set veth1 netns demo-ns : Mueve un extremo de la interfaz virtual dentro del namespace 'demo-ns'.
-- sudo ip addr add [IP/Máscara] dev [interfaz] : Asigna una dirección IP y máscara de subred a la interfaz especificada.
-- sudo ip link set [interfaz] up : Activa y enciende la interfaz de red para permitir tráfico.
-
-5. GESTIÓN DE REPOSITORIO Y PUBLICACIÓN
-- mkdir -p ~/lab-redes && cd ~/lab-redes : Crea el directorio del laboratorio e ingresa a él.
-- git init : Inicializa un nuevo repositorio Git en el directorio actual.
-- git branch -M main : Renombra la rama por defecto a 'main'.
-- git add [archivos] : Prepara los archivos para incluirlos en el próximo commit.
-- git commit -m "mensaje" : Guarda una foto fija del código en el historial local con una descripción.
-- git remote add origin [URL_SSH] : Enlaza el repositorio local con el repositorio remoto en GitHub.
-- git push -u origin main : Sube las ramas y archivos locales guardados hacia el servidor remoto de GitHub.
+4. VIRTUALIZACIÓN DE RED Y NAMESPACES (TOPOLOGÍA hostA <-> hostB)
+- sudo ip netns add [nombre] : Crea un entorno de red aislado (Namespace).
+- ip netns list : Lista todos los namespaces activos en el Kernel.
+- sudo ip netns exec [ns] [comando] : Ejecuta un comando en el contexto del namespace.
+- sudo ip link add vethA type veth peer name vethB : Crea un cable Ethernet virtual de dos extremos.
+- sudo ip link set vethA netns hostA : Mueve el extremo vethA al namespace hostA.
+- sudo ip link set vethB netns hostB : Mueve el extremo vethB al namespace hostB.
+- sudo ip netns exec hostA ip addr add [IP/máscara] dev vethA : Asigna IP a la interfaz en hostA.
+- sudo ip netns exec hostA ip link set vethA up : Levanta la interfaz de red en hostA.
+- sudo ip netns exec hostA ip link set lo up : Levanta la interfaz loopback local en hostA.
