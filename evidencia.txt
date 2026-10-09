@@ -1,0 +1,28 @@
+=== NOMBRES DE ESPACIOS DE RED (NAMESPACES) ===
+demo-ns (id: 0)
+
+=== INTERFAZ PRINCIPAL (veth0) ===
+4: veth0@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether aa:9c:5b:91:2d:7c brd ff:ff:ff:ff:ff:ff link-netns demo-ns
+    inet 192.168.1.1/24 scope global veth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a89c:5bff:fe91:2d7c/64 scope link 
+       valid_lft forever preferred_lft forever
+
+=== INTERFAZ EN ESPACIO AISLADO (veth1) ===
+3: veth1@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 3e:9f:d8:be:4e:41 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.2/24 scope global veth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::3c9f:d8ff:febe:4e41/64 scope link 
+       valid_lft forever preferred_lft forever
+
+=== PRUEBA DE CONEXIÓN PING ===
+PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.515 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.079 ms
+64 bytes from 192.168.1.2: icmp_seq=3 ttl=64 time=0.043 ms
+
+--- 192.168.1.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2222ms
+rtt min/avg/max/mdev = 0.043/0.212/0.515/0.214 ms
