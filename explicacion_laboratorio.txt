@@ -1,25 +1,18 @@
 ===================================================================
-REPORTE TÉCNICO: LABORATORIO DE REDES Y NAMESPACES EN LINUX (WSL2)
+EXPLICACIÓN TÉCNICA DEL LABORATORIO 1 (ETN1011 - UMSA)
 ===================================================================
 
-1. OBJETIVO DEL LABORATORIO
-Configurar un entorno de red aislado mediante Network Namespaces en Ubuntu 24.04 (WSL2), interconectarlo con el sistema principal mediante un par de interfaces virtuales (veth) y verificar conectividad y gestión de versiones con Git y GitHub.
+1. CONCEPTO DE NETWORK NAMESPACES:
+Los namespaces de Linux aíslan los recursos de red (interfaces, direcciones IP,
+tablas de ruteo y tablas ARP). No son máquinas virtuales, sino entornos aislados
+creados directamente dentro del mismo kernel Linux.
 
-2. ARQUITECTURA DE RED CONFIGURADA
-- Sistema Host (Ubuntu WSL2):
-  * Interfaz virtual: veth0
-  * Dirección IP: 192.168.1.1/24
+2. TOPOLOGÍA IMPLEMENTADA:
+- Namespace hostA (vethA: 192.168.1.1/24)
+- Namespace hostB (vethB: 192.168.1.2/24)
+- Enlace virtual: Par veth (vethA <-> vethB) que actúa como un cable Ethernet virtual.
 
-- Espacio Aislado (Network Namespace):
-  * Nombre: demo-ns
-  * Interfaz virtual: veth1
-  * Dirección IP: 192.168.1.2/24
-  * Interfaz local: lo (Loopback) activa
-
-3. PRUEBAS Y RESULTADOS
-- Verificación de interfaz veth0 en el host: Activa y con IP asignada.
-- Verificación de interfaz veth1 en demo-ns: Activa y con IP asignada.
-- Prueba ICMP (ping -c 3 192.168.1.2): 0% pérdida de paquetes (0% packet loss), latencia promedio < 0.5ms.
-
-4. CONCLUSIÓN
-El aislamiento a nivel de red funciona correctamente en el kernel de Linux. El tráfico entre el host y el namespace fluye a través del enlace virtual veth sin interferir con la red principal.
+3. VOLATILIDAD Y REPRODUCIBILIDAD:
+Los namespaces y los pares veth residen únicamente en la memoria RAM del sistema,
+por lo que se eliminan al reiniciar WSL2/Ubuntu. El script 'setup.sh' permite
+reconstruir de forma automática toda la topología en un solo comando.

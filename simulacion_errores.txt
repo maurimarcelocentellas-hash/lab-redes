@@ -1,32 +1,28 @@
-=======================================================
-   PRUEBAS DE SIMULACIÓN DE ERRORES TEÓRICOS DE RED
-=======================================================
+===================================================================
+  SIMULACIÓN DE ERRORES TEÓRICOS DE RED (hostA <-> hostB)
+===================================================================
 
-1. PRUEBA DE ERROR: Intento de salida a Internet desde el Namespace
-Comando: sudo ip netns exec demo-ns ping -c 2 -W 2 8.8.8.8
+1. ERROR DE CAPA 3: Salida a Internet sin Gateway/NAT
+Comando: sudo ip netns exec hostA ping -c 2 -W 2 8.8.8.8
 ping: connect: Network is unreachable
 
-EXPLICACIÓN TEÓRICA: Falla porque demo-ns no tiene Default Gateway ni NAT configurado hacia eth0.
+EXPLICACIÓN: Falla porque hostA no posee tabla de rutas por defecto (Default Gateway) ni NAT configurado hacia eth0.
 
--------------------------------------------------------
-2. PRUEBA DE ERROR: Cambio a una subred diferente (Mismatch de Subred)
-Configurando veth1 en 10.0.0.2/24 en lugar de 192.168.1.2/24...
-Comando: ping -c 2 -W 2 10.0.0.2
-PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+-------------------------------------------------------------------
+2. ERROR DE CAPA 3: Mismatch de Subred (IPs en redes distintas)
+Cambiando temporalmente vethB en hostB a 10.0.0.2/24...
+Comando desde hostA: sudo ip netns exec hostA ping -c 2 -W 2 10.0.0.2
+ping: connect: Network is unreachable
 
---- 10.0.0.2 ping statistics ---
-2 packets transmitted, 0 received, 100% packet loss, time 1123ms
+EXPLICACIÓN: Falla porque hostA (192.168.1.1/24) y hostB (10.0.0.2/24) están en subredes lógicas distintas sin un router intermedio.
 
-
-EXPLICACIÓN TEÓRICA: Falla porque veth0 (192.168.1.1) y veth1 (10.0.0.2) están en redes lógicas distintas sin un router intermedio.
-
--------------------------------------------------------
+-------------------------------------------------------------------
 3. RESTAURACIÓN DE RED A ESTADO OPERATIVO
-Comando: ping -c 2 192.168.1.2
+Comando: sudo ip netns exec hostA ping -c 2 192.168.1.2
 PING 192.168.1.2 (192.168.1.2) 56(84) bytes of data.
-64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.062 ms
-64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.049 ms
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.088 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.075 ms
 
 --- 192.168.1.2 ping statistics ---
-2 packets transmitted, 2 received, 0% packet loss, time 1110ms
-rtt min/avg/max/mdev = 0.049/0.055/0.062/0.006 ms
+2 packets transmitted, 2 received, 0% packet loss, time 1116ms
+rtt min/avg/max/mdev = 0.075/0.081/0.088/0.006 ms
