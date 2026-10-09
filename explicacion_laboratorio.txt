@@ -16,3 +16,8 @@ creados directamente dentro del mismo kernel Linux.
 Los namespaces y los pares veth residen únicamente en la memoria RAM del sistema,
 por lo que se eliminan al reiniciar WSL2/Ubuntu. El script 'setup.sh' permite
 reconstruir de forma automática toda la topología en un solo comando.
+
+4. DIAGNÓSTICO DE CONECTIVIDAD VS RESOLUCIÓN DE NOMBRES (DNS):
+Si al ejecutar 'ping 8.8.8.8' hay respuesta pero 'ping google.com' falla, la capa
+de red (Capa 3) y la puerta de enlace funcionaban bien. El fallo radica exclusivamente
+en el servicio de DNS o en la configuración del archivo /etc/resolv.conf.

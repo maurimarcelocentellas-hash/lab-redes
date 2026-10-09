@@ -38,3 +38,10 @@ GUÍA DE COMANDOS COMPLETA - ETN1011 (CLASE DE ORIENTACIÓN LAB 1)
 - sudo ip netns exec hostA ip addr add [IP/máscara] dev vethA : Asigna IP a la interfaz en hostA.
 - sudo ip netns exec hostA ip link set vethA up : Levanta la interfaz de red en hostA.
 - sudo ip netns exec hostA ip link set lo up : Levanta la interfaz loopback local en hostA.
+
+5. DIAGNÓSTICO DE CONECTIVIDAD Y RESOLUCIÓN DNS (DIAPOSITIVA 21)
+- ping 8.8.8.8 : Prueba conectividad directa por IP (Capa 3).
+- ping google.com : Prueba conectividad e integración con resolución de nombres (DNS).
+- traceroute 8.8.8.8 : Muestra la ruta salto a salto hasta la IP destino.
+- mtr 8.8.8.8 : Realiza un diagnóstico en tiempo real del camino hacia el destino.
+- Diagnóstico DNS: Si 8.8.8.8 responde pero google.com no, se debe revisar el servidor DNS en /etc/resolv.conf.
